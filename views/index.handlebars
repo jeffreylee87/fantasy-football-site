@@ -1,38 +1,59 @@
-<h1>Cats!</h1>
-
-<h2>Cats that are not sleepy!</h2>
-
-<ul>
-  {{#each cats}}
-    {{#unless sleepy}}
-      {{> cats/cat-block sleep=true}}
-    {{/unless}}
-  {{/each}}
-</ul>
-
-<h2>Cats that are sleepy!</h2>
-
-<ul>
-  {{#each cats}}
-    {{#if sleepy}}
-      {{> cats/cat-block sleep=false}}
-    {{/if}}
-  {{/each}}
-</ul>
-
-<h2>Add a Cat</h2>
-<form class="create-form">
-
-  <div class="form-group">
-    <label for="ca">Cat Name:</label>
-    <input type="text" id="ca" name="name">
-  </div>
-
-  <div class="form-group">
-    <label for="slee">Sleepy?</label><br>
-    <input type="radio" name="sleepy" value="1" checked> Sleepy!<br>
-    <input type="radio" name="sleepy" value="0"> Awake
-  </div>
-
-  <button type="submit">Add Cat</button>
-</form>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/"><i class="fas fa-football-ball"></i></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="/">Home
+                <span class="sr-only">(current)</span>
+            </a>
+            <a class="nav-item nav-link" href="/saved">Saved Articles</a>
+            {{!-- might want to make a click event to scrape not the href --}}
+            <a  class="btn btn-danger active scraper" role="button" aria-pressed="true">Get Articles</a>
+            {{!-- <a href="/clearall" class="btn btn-danger active" role="button" aria-pressed="true"> <i class="fas fa-poo"></i></a> --}}
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+        <div class="jumbotron text-center background-image" style=" background: url('/assets/images/arena.jpg') no-repeat center center;">
+            <div class="overlay">
+                <div class="caption">
+                    <h1 class="display-1">Fantasy Football</h1>
+                    <h2 >Draft Assistant</h2>
+                </div>
+                <div class="row">
+                  <a type="button" class="btn btn-secondary text-black" target="_blank" href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php">Fantasy Pros Rankings</a>
+                  <a type="button" class="btn btn-secondary text-black" target="_blank" href="http://www.espn.com/fantasy/football/">ESPN Rankings</a>
+                </div>
+            </div>
+        </div>
+    <div class=row>
+        <div class="col-12">
+            {{#if articles}}
+            {{#each articles}}
+                <div class="card w-90">
+                    <div class="card-header text-white bg-primary">
+                        <a href={{link}} target="_blank" class="text-white">
+                            <h2>{{title}}</h2>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            {{summary}}
+                        </p>
+                        <button id="{{_id}}" class="btn btn-primary save-btn">Save Article</button>
+                    </div>
+                </div>
+            {{/each}}
+            {{else}}
+                <div class="card text-white bg-warning w-90 p-1">
+                    <div class="card-body text-center">
+                        No Fantasy Football Articles!!! Hit the Red Button that says Get Articles!
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

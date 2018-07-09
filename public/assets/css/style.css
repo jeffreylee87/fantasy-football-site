@@ -1,1 +1,17 @@
+* {
+  font-family: 'Graduate', cursive;
+
+}
+
+.jumbotron {
+  
+  color: black;
+  text-shadow: 2px 2px 4px blue;
+
+}
+
+body {
+  background-color: black !important;
+}
+
 
