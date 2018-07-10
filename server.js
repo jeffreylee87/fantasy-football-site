@@ -60,21 +60,22 @@ app.get("/scrape", function(req, res) {
         result.summary = $(this)
         .children(".subtitle")
         .text();
-  
+        
+        
+
         // Create a new Article using the `result` object built from scraping
-        db.Article.create(result, {unique: true})
+        db.Article.create(result)
           .then(function(dbArticle) {
             // View the added result in the console
             console.log(dbArticle);
           })
           .catch(function(err) {
             // If an error occurred, send it to the client
-            return res.json(err);
+            //res.json(err);
           });
       });
   
-      // If we were able to successfully scrape and save an Article, send a message to the client
-    //   res.send("Scrape Complete");
+     
     db.Article.find({isSaved: false})
         .then(function (dbArticle) {
             // If we were able to successfully find Articles, send them back to the client
@@ -92,6 +93,7 @@ app.get("/scrape", function(req, res) {
     });
   });
 
+  //gets all the saved articles
   app.get("/saved", (req, res) => {
     db.Article.find({isSaved: true})
         .then(function (retrievedArticles) {
@@ -109,16 +111,8 @@ app.get("/scrape", function(req, res) {
         
 });
 
-///////work in progress, can't get the whole thing to drop
-//   app.get("/clearall", function(req, res) {
-//     // Remove's every article
-//     db.Article.drop(function(err, delOK) {
-//         if (err) throw err;
-//         if (delOK) console.log("Collection deleted");
-//         db.close();
-//     });
-//   });
 
+//pretty much gets all articles that aren't saved
   app.get("/", (req, res) => {
     db.Article.find({isSaved: false})
         .then(function (dbArticle) {
@@ -149,6 +143,7 @@ app.get("/articles", function(req, res) {
       });
   });
 
+  //path that updates isSaved - pretty much moves it there 
   app.put("/save/:id", function (req, res) {
     db.Article.findOneAndUpdate({ _id: req.params.id }, { isSaved: true })
         .then(function (data) {
@@ -161,6 +156,7 @@ app.get("/articles", function(req, res) {
         });;
 });
 
+//path that puts the article back into the scrape area
 app.put("/remove/:id", function (req, res) {
     db.Article.findOneAndUpdate({ _id: req.params.id }, { isSaved: false })
         .then(function (data) {
@@ -209,6 +205,24 @@ app.get("/articles/:id", function(req, res) {
         res.json(err);
       });
   });
+
+  //path to delete note from database
+  app.delete("/note/:id", function (req, res) {
+    // Create a new note and pass the req.body to the entry
+    db.Note.findByIdAndRemove({ _id: req.params.id })
+        .then(function (dbNote) {
+
+            return db.Article.findOneAndUpdate({ note: req.params.id }, { $pullAll: [{ note: req.params.id }]});
+        })
+        .then(function (dbArticle) {
+            // If we were able to successfully update an Article, send it back to the client
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+    });
 
 
 app.listen(PORT, function() {
