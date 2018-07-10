@@ -29,8 +29,10 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/fantasyFootball");
-
+// mongoose.connect("mongodb://localhost/fantasyFootball");
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/fantasyFootball";
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
 // Set Handlebars.
 var exphbs = require("express-handlebars");
 
